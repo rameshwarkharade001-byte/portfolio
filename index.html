@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rameshwar Kharade | 3D Visual Designer & Video Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #09020e;
+      --card-bg: rgba(28, 8, 38, 0.78);
+      --border: rgba(255, 42, 133, 0.35);
+      --pink: #ff2a85;
+      --pink-glow: #ff60a8;
+      --purple: #d946ef;
+      --text: #fdf2f8;
+      --muted: #e9d5ff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+    h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+    nav {
+      position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+      width: 92%; max-width: 1150px; background: rgba(20, 5, 28, 0.88);
+      backdrop-filter: blur(16px); border: 1px solid var(--border);
+      border-radius: 50px; padding: 12px 24px; display: flex;
+      justify-content: space-between; align-items: center; z-index: 100;
+      box-shadow: 0 8px 30px rgba(255, 42, 133, 0.25);
+    }
+    .logo { font-weight: 900; font-size: 1.25rem; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .logo span { background: linear-gradient(135deg, #ff2a85, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-cta {
+      background: linear-gradient(135deg, #ff2a85, #d946ef); color: #fff;
+      padding: 8px 18px; border-radius: 30px; text-decoration: none;
+      font-size: 0.88rem; font-weight: 700; box-shadow: 0 0 15px rgba(255, 42, 133, 0.6);
+    }
+    .container { max-width: 1150px; margin: 0 auto; padding: 0 18px; }
+    .hero { min-height: 82vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding-top: 105px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px;
+      background: rgba(255, 42, 133, 0.15); border: 1px solid var(--border);
+      border-radius: 30px; font-size: 0.82rem; color: var(--pink-glow); margin-bottom: 18px;
+    }
+    .dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 8px #22c55e; }
+    .hero h1 { font-size: clamp(2.2rem, 6vw, 4.2rem); font-weight: 900; line-height: 1.15; margin-bottom: 16px; }
+    .grad { background: linear-gradient(135deg, #fff 15%, #ff7bb5 55%, #ff2a85 95%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { max-width: 620px; font-size: 1.05rem; color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
+    .btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; }
+    .btn { padding: 13px 24px; border-radius: 12px; font-size: 0.95rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; }
+    .btn-wa { background: #25D366; color: #072612; box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); }
+    .btn-pk { background: linear-gradient(135deg, #ff2a85, #d946ef); color: #fff; box-shadow: 0 4px 20px rgba(255, 42, 133, 0.5); }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; width: 100%; margin-bottom: 50px; }
+    .stat { background: var(--card-bg); border: 1px solid var(--border); padding: 18px; border-radius: 16px; text-align: center; }
+    .stat h3 { font-size: 1.9rem; color: var(--pink-glow); }
+    .stat p { font-size: 0.8rem; color: var(--muted); }
+    .sec-title { text-align: center; font-size: 2.1rem; font-weight: 800; margin-bottom: 10px; }
+    .sec-sub { text-align: center; color: var(--muted); margin-bottom: 28px; font-size: 0.95rem; }
+    .filters { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 30px; }
+    .f-btn { padding: 8px 18px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); border-radius: 30px; font-weight: 600; cursor: pointer; }
+    .f-btn.active { background: var(--pink); color: #fff; box-shadow: 0 0 15px var(--pink); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; transition: 0.3s; position: relative; }
+    .card:hover { transform: translateY(-6px); border-color: var(--pink-glow); box-shadow: 0 15px 35px rgba(255, 42, 133, 0.3); }
+    .thumb { width: 100%; height: 195px; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; background-size: cover; background-position: center; }
+    .thumb::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(12,2,18,0.3) 0%, rgba(12,2,18,0.88) 100%); }
+    .thumb-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .thumb-content i { font-size: 2.4rem; color: var(--pink-glow); filter: drop-shadow(0 0 10px var(--pink)); }
+    .thumb-content h4 { font-size: 1.2rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tag { position: absolute; top: 12px; left: 12px; z-index: 3; background: rgba(15, 2, 22, 0.9); padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; color: var(--pink-glow); border: 1px solid var(--border); }
+    .info { padding: 18px; }
+    .info h3 { font-size: 1.15rem; margin-bottom: 6px; color: #fff; }
+    .info p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
+    .meta { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; }
+    .meta span { font-size: 0.78rem; color: var(--pink-glow); font-weight: 600; }
+    .meta a { color: #fff; background: rgba(255, 42, 133, 0.25); border: 1px solid var(--pink); padding: 5px 12px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 600; }
+    .contact { margin: 70px 0 50px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 40px 20px; text-align: center; box-shadow: 0 0 35px rgba(255, 42, 133, 0.2); }
+    .c-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-top: 28px; }
+    .c-box { background: rgba(255,255,255,0.04); border: 1px solid var(--border); padding: 22px; border-radius: 16px; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.3s; }
+    .c-box:hover { background: rgba(255, 42, 133, 0.15); transform: translateY(-4px); }
+    .c-box i { font-size: 2rem; color: var(--pink-glow); }
+    footer { text-align: center; padding: 25px; color: var(--muted); font-size: 0.82rem; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <nav>
+    <div class="logo"><i class="fa-solid fa-cube" style="color:#ff2a85;"></i> <span>Rameshwar</span></div>
+    <a href="https://wa.me/917666401052?text=Hello%20Rameshwar,%20I%20saw%20your%20portfolio%20and%20want%20to%20work%20with%20you!" class="nav-cta" target="_blank"><i class="fa-brands fa-whatsapp"></i> Hire Me</a>
+  </nav>
+
+  <div class="container">
+    <section class="hero">
+      <div class="badge"><span class="dot"></span> Available for Immediate Projects</div>
+      <h1>High-Converting <span class="grad">3D Visuals,</span><br>Thumbnails & Video Edits</h1>
+      <p>I help YouTubers, brands, and agencies skyrocket their CTR and engagement with viral thumbnails, 3D brand graphics, and dynamic motion reels.</p>
+      <div class="btns">
+        <a href="https://wa.me/917666401052?text=Hi%20Rameshwar,%20let's%20discuss%20a%20project!" class="btn btn-wa" target="_blank"><i class="fa-brands fa-whatsapp fa-lg"></i> WhatsApp: 7666401052</a>
+        <a href="tel:+917666401052" class="btn btn-pk"><i class="fa-solid fa-phone"></i> Direct Call</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><h3>100+</h3><p>Projects Completed</p></div>
+        <div class="stat"><h3>15.8%</h3><p>Avg. CTR Boost</p></div>
+        <div class="stat"><h3>24 Hr</h3><p>Fast Turnaround</p></div>
+        <div class="stat"><h3>4K 60fps</h3><p>Pro Render Quality</p></div>
+      </div>
+    </section>
+
+    <section id="works">
+      <h2 class="sec-title">Featured Creative Works</h2>
+      <p class="sec-sub">Click on any service below to request a custom sample or order directly on WhatsApp.</p>
+      <div class="filters">
+        <button class="f-btn active" onclick="filterSelection('all', this)">All Works</button>
+        <button class="f-btn" onclick="filterSelection('thumb', this)">YouTube Thumbnails</button>
+        <button class="f-btn" onclick="filterSelection('brand', this)">3D & Branding</button>
+        <button class="f-btn" onclick="filterSelection('video', this)">Motion & Video Reels</button>
+      </div>
+
+      <div class="grid">
+        <div class="card" data-cat="thumb">
+          <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=700&q=80');">
+            <span class="tag">YouTube CTR Thumbnail</span>
+            <div class="thumb-content"><i class="fa-solid fa-bolt"></i><h4>Best AI Tools: Who Wins?</h4></div>
+          </div>
+          <div class="info">
+            <h3>High-CTR Tech & AI Thumbnail</h3>
+            <p>Expressive reaction cut-out, 3D neon grid backdrop, and glowing app icons (Gemini, Claude, ChatGPT) engineered for viral clicks.</p>
+            <div class="meta"><span>Tech / AI Niche</span><a href="https://wa.me/917666401052?text=I%20want%20a%20Tech/AI%20YouTube%20Thumbnail%20like%20your%20portfolio!" target="_blank">Order Similar &rarr;</a></div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="thumb">
+          <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1642543492481-44e81e3914a7?w=700&q=80');">
+            <span class="tag">Storytime / Anime Style</span>
+            <div class="thumb-content"><i class="fa-solid fa-chart-line"></i><h4>I'm Done With Stock Market</h4></div>
+          </div>
+          <div class="info">
+            <h3>Storytime & Finance Illustration</h3>
+            <p>Custom 2D anime/storytime character art with dramatic red spotlight, metallic chains, and high-tension typography.</p>
+            <div class="meta"><span>Finance / Documentary</span><a href="https://wa.me/917666401052?text=I%20want%20a%20Storytime/Finance%20Thumbnail%20like%20your%20portfolio!" target="_blank">Order Similar &rarr;</a></div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="thumb">
+          <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1542751371-adc38448a05e?w=700&q=80');">
+            <span class="tag">Gaming Stream Cover</span>
+            <div class="thumb-content"><i class="fa-solid fa-gamepad"></i><h4>Midnight Gaming LIVE</h4></div>
+          </div>
+          <div class="info">
+            <h3>Midnight Gaming Live Stream</h3>
+            <p>Dark-mode gaming composite with realistic fire VFX, glowing neon typography, and high-visibility LIVE badge.</p>
+            <div class="meta"><span>Gaming / Esports</span><a href="https://wa.me/917666401052?text=I%20want%20a%20Gaming%20Thumbnail%20like%20your%20portfolio!" target="_blank">Order Similar &rarr;</a></div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="brand">
+          <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=700&q=80');">
+            <span class="tag">3D Concept Visual</span>
+            <div class="thumb-content"><i class="fa-solid fa-brain"></i><h4>The AI Revolution 3D</h4></div>
+          </div>
+          <div class="info">
+            <h3>The AI Revolution 3D Artwork</h3>
+            <p>Futuristic dual-hemisphere biological and digital polygon brain render over a glowing cyber wireframe mesh.</p>
+            <div class="meta"><span>3D Tech Art</span><a href="https://wa.me/917666401052?text=I%20need%203D%20Concept%20Graphics!" target="_blank">Order Similar &rarr;</a></div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="brand">
+          <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1513151233558-d860c5398176?w=700&q=80');">
+            <span class="tag">3D Promotional Ad</span>
+            <div class="thumb-content"><i class="fa-solid fa-wand-magic-sparkles"></i><h4>3D Luxury Sale Render</h4></div>
+          </div>
+          <div class="info">
+            <h3>3D Festive & E-Commerce Promo</h3>
+            <p>Photorealistic 3D emerald and gold ornamental render with hanging metallic lanterns and glowing sale typography.</p>
+            <div class="meta"><span>Social Media Ads</span><a href="https://wa.me/917666401052?text=I%20need%203D%20Social%20Media%20Posters!" target="_blank">Order Similar &rarr;</a></div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="brand">
+          <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=700&q=80');">
+            <span class="tag">Brand Identity & Print</span>
+            <div class="thumb-content"><i class="fa-solid fa-notes-medical"></i><h4>Healthcare Branding</h4></div>
+          </div>
+          <div class="info">
+            <h3>Greenplus Logo & Clinic Collateral</h3>
+            <p>Complete healthcare branding suite including minimalist cross logo, executive doctor business cards, and clinic flyers.</p>
+            <div class="meta"><span>Logo & Flyers</span><a href="https://wa.me/917666401052?text=I%20need%20Logo%20and%20Branding%20Design!" target="_blank">Order Similar &rarr;</a></div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="video">
+          <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=700&q=80');">
+            <span class="tag">Motion Reel & Shorts</span>
+            <div class="thumb-content"><i class="fa-solid fa-circle-play"></i><h4>Talking Head & Reels Edit</h4></div>
+          </div>
+          <div class="info">
+            <h3>Viral Reels & Talking Head Editing</h3>
+            <p>High-retention short-form edits with dynamic captions, motion graphics hooks, B-roll transitions, and sound design.</p>
+            <div class="meta"><span>Reels / Shorts</span><a href="https://wa.me/917666401052?text=Hi%20Rameshwar,%20send%20me%20your%20Reels%20and%20Video%20Editing%20samples!" target="_blank">Get Video Samples &rarr;</a></div>
+          </div>
+        </div>
+
+        <div class="card" data-cat="video">
+          <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=700&q=80');">
+            <span class="tag">Corporate Video (50s)</span>
+            <div class="thumb-content"><i class="fa-solid fa-film"></i><h4>Corporate Pitch & Promo</h4></div>
+          </div>
+          <div class="info">
+            <h3>Corporate Deck & Summit Teaser</h3>
+            <p>Sleek architectural slide presentations, 2D animated medical explainers, and fast-paced B2B conference promo videos.</p>
+            <div class="meta"><span>Corporate Motion</span><a href="https://wa.me/917666401052?text=Hi%20Rameshwar,%20send%20me%20your%20Corporate%20Video%20samples!" target="_blank">Get Video Samples &rarr;</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <h2 class="sec-title">Let's Start Your Project Today</h2>
+      <p style="color:var(--muted);">Click below to message me on WhatsApp, call directly, or send an email.</p>
+      <div class="c-grid">
+        <a href="https://wa.me/917666401052?text=Hello%20Rameshwar,%20I%20want%20to%20hire%20you!" class="c-box" target="_blank">
+          <i class="fa-brands fa-whatsapp" style="color:#25D366;"></i>
+          <h4>WhatsApp Chat</h4>
+          <p>+91 7666401052</p>
+        </a>
+        <a href="tel:+917666401052" class="c-box">
+          <i class="fa-solid fa-phone-volume" style="color:#60a5fa;"></i>
+          <h4>Direct Phone Call</h4>
+          <p>+91 7666401052</p>
+        </a>
+        <a href="mailto:rameshwarkharade001@gmail.com" class="c-box">
+          <i class="fa-solid fa-envelope" style="color:#f59e0b;"></i>
+          <h4>Official Email</h4>
+          <p>rameshwarkharade001@gmail.com</p>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <footer>&copy; 2026 Rameshwar Gajanan Kharade. All Rights Reserved.</footer>
+
+  <script>
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+    const pts = Array.from({length: 55}, (_, i) => ({
+      x: Math.random() * w, y: Math.random() * h, z: Math.random() * 600,
+      s: Math.random() * 2 + 1, c: i % 2 ? 'rgba(255,42,133,' : 'rgba(217,70,239,'
+    }));
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      pts.forEach(p => {
+        p.z -= 1.2; if (p.z <= 1) p.z = 600;
+        const k = 300 / p.z;
+        const px = (p.x - w/2) * k + w/2;
+        const py = (p.y - h/2) * k + h/2;
+        if (px > 0 && px < w && py > 0 && py < h) {
+          ctx.beginPath(); ctx.arc(px, py, p.s * k, 0, Math.PI * 2);
+          ctx.fillStyle = p.c + Math.min(1, (600 - p.z)/300) + ')'; ctx.fill();
+        }
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+    function filterSelection(cat, btn) {
+      document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.card').forEach(c => {
+        c.style.display = (cat === 'all' || c.dataset.cat === cat) ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
